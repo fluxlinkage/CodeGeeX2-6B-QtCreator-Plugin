@@ -1,0 +1,11 @@
+{
+    \"Name\" : \"CodeGeeX2\",
+    \"Version\" : \"1.0.0\",
+    \"CompatVersion\" : \"$$QTCREATOR_COMPAT_VERSION\",
+    \"Vendor\" : \"fluxlinkage@sina.com\",
+    \"Copyright\" : \"(C) 2023\",
+    \"License\" : \"This plugin may be used under the terms of the GNU General Public License version 3 as published by the Free Software Foundation. Please review the following information to ensure the GNU General Public License requirements will be met: https://www.gnu.org/licenses/gpl-3.0.html.\",
+    \"Description\" : \"CodeGeeX2-6B support\",
+    \"Url\" : \"https://github.com/fluxlinkage/CodeGeeX2-6B-QtCreator-Plugin\",
+    $$dependencyList
+}

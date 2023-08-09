@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/codegeex2">
+    <file>images/settingscategory_codegeex2.png</file>
+    <file>images/settingscategory_codegeex2@2x.png</file>
+    <file>images/codegeex2.png</file>
+    <file>images/codegeex2@2x.png</file>
+  </qresource>
+</RCC>
