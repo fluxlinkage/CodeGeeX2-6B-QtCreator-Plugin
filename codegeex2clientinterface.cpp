@@ -136,6 +136,7 @@ void CodeGeeX2ClientInterface::sendData(const QByteArray &data)
                 emit messageReceived(responseMsg);
             }else if(objSend.value("method")=="getCompletionsCycling"){
                 clearReply();
+                //qInfo("%s",msg.toRawData().data());
                 QJsonObject objParams=objSend.value("params").toObject();
                 QUrl url(CodeGeeX2Settings::instance().url.value());
                 QNetworkRequest req(url);
@@ -145,7 +146,9 @@ void CodeGeeX2ClientInterface::sendData(const QByteArray &data)
                 m_position=objParams.value("doc").toObject().value("position");
                 int maxLen=CodeGeeX2Settings::instance().contextLimit.value();
                 QString context=objParams.value("txt").toString().left(m_pos);
+                bool trimmed=false;
                 if(context.length()>maxLen){
+                    trimmed=true;
                     int offset=context.length()-maxLen;
                     int indN=context.indexOf('\n',offset);
                     if(indN>=0){
@@ -158,6 +161,84 @@ void CodeGeeX2ClientInterface::sendData(const QByteArray &data)
                     }
                     m_pos-=offset;
                     context=context.mid(offset);
+                }
+                if(!trimmed&&CodeGeeX2Settings::instance().expandHeaders.value()){
+                    QUrl fileURI(objParams.value("doc").toObject().value("uri").toString());
+                    if(fileURI.isLocalFile()){
+                        static const QRegularExpression reHeaderQ("#include\\s+\"([^\"]+)\"");
+                        static const QRegularExpression reHeaderA("#include\\s+<([^>]+)>");
+                        QFileInfo qfi(fileURI.toLocalFile());
+                        QStringList searchPaths;
+                        QDir dir=qfi.dir();
+                        searchPaths.push_back(dir.absolutePath());
+                        while(dir.cdUp()){
+                            searchPaths.push_back(dir.absolutePath());
+                        }
+                        QStringList headerNames;
+                        QStringList headerStrings;
+                        {
+                            QRegularExpressionMatchIterator it=reHeaderQ.globalMatch(context);
+                            while(it.hasNext()){
+                                QRegularExpressionMatch match=it.next();
+                                QString header=match.captured(1);
+                                if(header.isEmpty()){
+                                    continue;
+                                }
+                                headerNames.push_back(header);
+                                headerStrings.push_back(match.captured(0));
+                            }
+                        }
+                        {
+                            QRegularExpressionMatchIterator it=reHeaderA.globalMatch(context);
+                            while(it.hasNext()){
+                                QRegularExpressionMatch match=it.next();
+                                QString header=match.captured(1);
+                                if(header.isEmpty()){
+                                    continue;
+                                }
+                                headerNames.push_back(header);
+                                headerStrings.push_back(match.captured(0));
+                            }
+                        }
+                        int space=maxLen-context.length();
+                        bool full=false;
+                        for(int i=0;i<headerNames.size();i++){
+                            const QString &nm=headerNames.at(i);
+                            QFileInfo tmpFI(nm);
+                            if(tmpFI.baseName()==qfi.baseName()){
+                                for(const QString &dirPath:searchPaths){
+                                    QFileInfo qfiHeader(dirPath+"/"+nm);
+                                    if(qfiHeader.exists()){
+                                        if(!expandHeader(context,headerStrings.at(i),dirPath+"/"+nm,space,m_pos)){
+                                            i=headerNames.size();
+                                            full=true;
+                                            break;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if(!full){
+                            for(int i=0;i<headerNames.size();i++){
+                                const QString &nm=headerNames.at(i);
+                                QFileInfo tmpFI(nm);
+                                if(tmpFI.baseName()==qfi.baseName()){
+                                    continue;
+                                }
+                                for(const QString &dirPath:searchPaths){
+                                    QFileInfo qfiHeader(dirPath+"/"+nm);
+                                    if(qfiHeader.exists()){
+                                        if(!expandHeader(context,headerStrings.at(i),dirPath+"/"+nm,space,m_pos)){
+                                            i=headerNames.size();
+                                            break;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 m_row=0;
                 m_col=0;
@@ -216,6 +297,27 @@ void CodeGeeX2ClientInterface::clearReply()
         LanguageServerProtocol::JsonRpcMessage errMsg(obj);
         emit messageReceived(errMsg);
     }
+}
+
+bool CodeGeeX2ClientInterface::expandHeader(QString &txt, const QString &includeStr, const QString &path, int &space, int &pos)
+{
+    QFileInfo qfiHeader(path);
+    if(qfiHeader.size()-includeStr.length()>space){
+        return false;
+    }
+    int ind=txt.indexOf(includeStr);
+    if(ind<0){
+        return false;
+    }
+    QFile qf(path);
+    QTextStream qts(&qf);
+    qf.open(QIODevice::ReadOnly|QIODevice::Text);
+    QString content=qts.readAll();
+    qf.close();
+    txt.replace(ind,includeStr.length(),content);
+    space-=(content.length()-includeStr.length());
+    pos+=(content.length()-includeStr.length());
+    return true;
 }
 
 } // namespace Internal

@@ -86,6 +86,13 @@ CodeGeeX2Settings::CodeGeeX2Settings()
     seed.setEnabler(&enableCodeGeeX2);
     seed.setToolTip(Tr::tr("Random number seed."));
 
+    expandHeaders.setDisplayName(Tr::tr("Try to expand headers (experimnetal)"));
+    expandHeaders.setSettingsKey("CodeGeeX2.ExpandHeaders");
+    expandHeaders.setLabelText(Tr::tr("Try to expand headers (experimnetal)"));
+    expandHeaders.setDefaultValue(true);
+    expandHeaders.setEnabler(&enableCodeGeeX2);
+    expandHeaders.setToolTip(Tr::tr("Try to expand headers when sending requests."));
+
 }
 
 CodeGeeX2Settings &CodeGeeX2Settings::instance()

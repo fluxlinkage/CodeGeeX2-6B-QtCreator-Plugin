@@ -24,6 +24,7 @@ public:
             CodeGeeX2Settings::instance().topK, br,
             CodeGeeX2Settings::instance().topP, br,
             CodeGeeX2Settings::instance().seed, br,
+            CodeGeeX2Settings::instance().expandHeaders, br,
             st
         }.attachTo(this);
 

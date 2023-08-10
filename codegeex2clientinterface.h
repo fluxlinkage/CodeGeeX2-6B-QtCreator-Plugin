@@ -35,6 +35,7 @@ private:
     QSharedPointer<QNetworkAccessManager> m_manager;
 
     void clearReply();
+    bool expandHeader(QString &txt,const QString &includeStr,const QString &path,int &space,int &pos);
 };
 
 } // namespace Internal
