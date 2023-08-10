@@ -1,6 +1,3 @@
-// Copyright (C) 2023 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0+ OR GPL-3.0 WITH Qt-GPL-exception-1.0
-
 #include "codegeex2client.h"
 #include "codegeex2constants.h"
 #include "codegeex2settings.h"
@@ -33,16 +30,6 @@ using namespace ProjectExplorer;
 using namespace Core;
 
 namespace CodeGeeX2::Internal {
-
-//static LanguageClient::BaseClientInterface *clientInterface(const FilePath &nodePath,
-//                                                            const FilePath &distPath)
-//{
-//    CommandLine cmd{nodePath, {distPath.toFSPathString()}};
-
-//    const auto interface = new LanguageClient::StdIOClientInterface;
-//    interface->setCommandLine(cmd);
-//    return interface;
-//}
 
 CodeGeeX2Client::CodeGeeX2Client()
     : LanguageClient::Client(new CodeGeeX2ClientInterface())
@@ -180,15 +167,12 @@ void CodeGeeX2Client::handleCompletions(const GetCompletionRequest::Response &re
     if (cursors.hasSelection() || cursors.mainCursor().position() != requestPosition)
         return;
 
-    //qInfo("[1] %s",response.toRawData().data());
     if (const std::optional<GetCompletionResponse> result = response.result()) {
-        //qInfo("[2]%d",result->completions().toListOrEmpty().size());
         auto isValidCompletion = [](const Completion &completion) {
             return completion.isValid() && !completion.text().trimmed().isEmpty();
         };
         QList<Completion> completions = Utils::filtered(result->completions().toListOrEmpty(),
                                                               isValidCompletion);
-        //qInfo("[3]%d",completions.size());
 
         // remove trailing whitespaces from the end of the completions
         for (Completion &completion : completions) {
@@ -221,43 +205,6 @@ void CodeGeeX2Client::cancelRunningRequest(TextEditor::TextEditorWidget *editor)
     cancelRequest(it->id());
     m_runningRequests.erase(it);
 }
-
-//void CodeGeeX2Client::requestCheckStatus(
-//    bool localChecksOnly, std::function<void(const CheckStatusRequest::Response &response)> callback)
-//{
-//    CheckStatusRequest request{localChecksOnly};
-//    request.setResponseCallback(callback);
-
-//    sendMessage(request);
-//}
-
-//void CodeGeeX2Client::requestSignOut(
-//    std::function<void(const SignOutRequest::Response &response)> callback)
-//{
-//    SignOutRequest request;
-//    request.setResponseCallback(callback);
-
-//    sendMessage(request);
-//}
-
-//void CodeGeeX2Client::requestSignInInitiate(
-//    std::function<void(const SignInInitiateRequest::Response &response)> callback)
-//{
-//    SignInInitiateRequest request;
-//    request.setResponseCallback(callback);
-
-//    sendMessage(request);
-//}
-
-//void CodeGeeX2Client::requestSignInConfirm(
-//    const QString &userCode,
-//    std::function<void(const SignInConfirmRequest::Response &response)> callback)
-//{
-//    SignInConfirmRequest request(userCode);
-//    request.setResponseCallback(callback);
-
-//    sendMessage(request);
-//}
 
 bool CodeGeeX2Client::canOpenProject(Project *project)
 {

@@ -24,7 +24,6 @@ public slots:
 protected:
     void sendData(const QByteArray &data) override;
 private:
-//    QByteArray m_cache;
     QBuffer m_writeBuffer;
     QSharedPointer<QNetworkReply> m_reply;
     QJsonValue m_id;
@@ -35,7 +34,6 @@ private:
 
     QSharedPointer<QNetworkAccessManager> m_manager;
 
-    //QVector<std::pair<QPointer<QNetworkReply>,QString> > m_queue;
     void clearReply();
 };
 

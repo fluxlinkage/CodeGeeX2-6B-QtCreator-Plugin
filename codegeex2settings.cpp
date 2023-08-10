@@ -30,7 +30,6 @@ CodeGeeX2Settings::CodeGeeX2Settings()
                                    "position after changes to the document."));
 
     url.setDefaultValue("http://127.0.0.1:7860/run/predict");
-    //url.setExpectedKind(Utils::PathChooser::Any);
     url.setDisplayStyle(Utils::StringAspect::LineEditDisplay);
     url.setSettingsKey("CodeGeeX2.URL");
     url.setLabelText(Tr::tr("URL of CodeGeeX2 API:"));
