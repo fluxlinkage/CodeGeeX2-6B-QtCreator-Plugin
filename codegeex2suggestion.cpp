@@ -39,6 +39,20 @@ bool CodeGeeX2Suggestion::apply()
     return true;
 }
 
+bool CodeGeeX2Suggestion::applyLine()
+{
+    reset();
+    const Completion completion = m_completions.value(m_currentCompletion);
+    QTextCursor cursor = completion.range().toSelection(m_start.document());
+    QString str=completion.text();
+    int ind=str.indexOf('\n');
+    if(ind<0){
+        return apply();
+    }
+    cursor.insertText(str.left(ind+1));
+    return false;
+}
+
 bool CodeGeeX2Suggestion::applyWord(TextEditorWidget *widget)
 {
     const Completion completion = m_completions.value(m_currentCompletion);

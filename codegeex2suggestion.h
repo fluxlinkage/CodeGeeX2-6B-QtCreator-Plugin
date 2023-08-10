@@ -15,6 +15,7 @@ public:
                       int currentCompletion = 0);
 
     bool apply() final;
+    bool applyLine();
     bool applyWord(TextEditor::TextEditorWidget *widget) final;
     void reset() final;
     int position() final;

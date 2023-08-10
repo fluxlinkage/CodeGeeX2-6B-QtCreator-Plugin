@@ -42,12 +42,14 @@ public:
         next->setEnabled(m_completions.size() > 1);
 
         auto apply = addAction(Tr::tr("Apply (%1)").arg(QKeySequence(Qt::Key_Tab).toString()));
+        auto applyLine = addAction(Tr::tr("Apply Line"));
         auto applyWord = addAction(
             Tr::tr("Apply Word (%1)").arg(QKeySequence(QKeySequence::MoveToNextWord).toString()));
 
         connect(prev, &QAction::triggered, this, &CodeGeeX2CompletionToolTip::selectPrevious);
         connect(next, &QAction::triggered, this, &CodeGeeX2CompletionToolTip::selectNext);
         connect(apply, &QAction::triggered, this, &CodeGeeX2CompletionToolTip::apply);
+        connect(applyLine, &QAction::triggered, this, &CodeGeeX2CompletionToolTip::applyLine);
         connect(applyWord, &QAction::triggered, this, &CodeGeeX2CompletionToolTip::applyWord);
 
         updateLabels();
@@ -91,6 +93,19 @@ private:
     {
         if (TextSuggestion *suggestion = m_editor->currentSuggestion()) {
             if (!suggestion->apply())
+                return;
+        }
+        ToolTip::hide();
+    }
+
+    void applyLine()
+    {
+        if (TextSuggestion *suggestion = m_editor->currentSuggestion()) {
+            CodeGeeX2Suggestion *sugg=dynamic_cast<CodeGeeX2Suggestion*>(suggestion);
+            if(sugg==nullptr){
+                return;
+            }
+            if (!sugg->applyLine())
                 return;
         }
         ToolTip::hide();
