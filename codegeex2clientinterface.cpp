@@ -56,11 +56,29 @@ void CodeGeeX2ClientInterface::replyFinished()
         QJsonObject obj=doc.object();
         QJsonArray ary=obj.value("data").toArray();
         QString str=ary.first().toString();
+        //qInfo("res=");
+        //qInfo("%s",str.toStdString().c_str());
         int firstLnPos=str.indexOf('\n');
         if(firstLnPos>0&&str.left(firstLnPos).contains("language")){
-            str=str.mid(firstLnPos+1+m_pos);
-        }else{
+            str=str.mid(firstLnPos+1);
+        }
+        int headI=0;
+        if(m_row>0){
+            int r=0;
+            for(int i=0;i<qMin(m_pos,str.length());i++){
+                if(str.at(i).unicode()=='\n'){
+                    r++;
+                    if(r==m_row){
+                        headI=i+1;
+                        break;
+                    }
+                }
+            }
+        }
+        if(m_row>0&&headI==0){
             str=str.mid(m_pos);
+        }else{
+            str=str.mid(headI+m_col);
         }
 //        QJsonObject responseRangeEndObj;
 //        int lineN=str.count('\n');
@@ -157,6 +175,9 @@ void CodeGeeX2ClientInterface::sendData(const QByteArray &data)
                 QNetworkRequest req(url);
                 req.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
                 QJsonArray ary;
+                //qInfo("txt=");
+                //qInfo("%s",objParams.value("txt").toString().toStdString().c_str());
+                //qInfo("pos=%d",objParams.value("pos").toInt());
                 //qInfo("%s,%d",objSend.value("txt").toString().toStdString().c_str(),objSend.value("pos").toInt());
                 m_pos=objParams.value("pos").toInt();
                 m_position=objParams.value("doc").toObject().value("position");
@@ -176,6 +197,17 @@ void CodeGeeX2ClientInterface::sendData(const QByteArray &data)
                     m_pos-=offset;
                     context=context.mid(offset);
                 }
+                m_row=0;
+                m_col=0;
+                for(int i=0;i<m_pos;i++){
+                    if(context.at(i).unicode()=='\n'){
+                        m_row++;
+                        m_col=0;
+                    }else{
+                        m_col++;
+                    }
+                }
+                //qInfo("%d,%d",m_row,m_col);
                 ary.push_back(context);
                 ary.push_back("C++");
                 ary.push_back(CodeGeeX2Settings::instance().seed.value());

@@ -30,6 +30,8 @@ private:
     QJsonValue m_id;
     int m_pos;
     QJsonValue m_position;
+    int m_row;
+    int m_col;
 
     QSharedPointer<QNetworkAccessManager> m_manager;
 
