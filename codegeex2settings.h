@@ -26,6 +26,7 @@ public:
     Utils::DoubleAspect topP{this};
     Utils::IntegerAspect seed{this};
     Utils::BoolAspect expandHeaders{this};
+    Utils::BoolAspect braceBalance{this};
 };
 
 class CodeGeeX2ProjectSettings : public Utils::AspectContainer

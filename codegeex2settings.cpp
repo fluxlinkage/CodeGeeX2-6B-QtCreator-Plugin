@@ -93,6 +93,12 @@ CodeGeeX2Settings::CodeGeeX2Settings()
     expandHeaders.setEnabler(&enableCodeGeeX2);
     expandHeaders.setToolTip(Tr::tr("Try to expand headers when sending requests."));
 
+    braceBalance.setDisplayName(Tr::tr("Brace balance (experimnetal)"));
+    braceBalance.setSettingsKey("CodeGeeX2.BraceBalance");
+    braceBalance.setLabelText(Tr::tr("Brace balance (experimnetal)"));
+    braceBalance.setDefaultValue(true);
+    braceBalance.setEnabler(&enableCodeGeeX2);
+    braceBalance.setToolTip(Tr::tr("Stop suggestions from breaking brace balance."));
 }
 
 CodeGeeX2Settings &CodeGeeX2Settings::instance()

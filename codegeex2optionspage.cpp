@@ -25,6 +25,7 @@ public:
             CodeGeeX2Settings::instance().topP, br,
             CodeGeeX2Settings::instance().seed, br,
             CodeGeeX2Settings::instance().expandHeaders, br,
+            CodeGeeX2Settings::instance().braceBalance, br,
             st
         }.attachTo(this);
 

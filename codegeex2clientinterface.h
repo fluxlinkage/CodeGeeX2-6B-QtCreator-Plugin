@@ -31,6 +31,7 @@ private:
     QJsonValue m_position;
     int m_row;
     int m_col;
+    int m_braceLevel;
 
     QSharedPointer<QNetworkAccessManager> m_manager;
 

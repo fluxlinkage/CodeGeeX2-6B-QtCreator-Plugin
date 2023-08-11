@@ -77,6 +77,26 @@ void CodeGeeX2ClientInterface::replyFinished()
         }else{
             str=str.mid(headI+m_col);
         }
+        if(CodeGeeX2Settings::instance().braceBalance.value()){
+            for(int i=0;i<str.length();i++){
+                const QChar &ch=str.at(i);
+                if(ch=='{'){
+                    m_braceLevel++;
+                }else if(ch=='}'){
+                    m_braceLevel--;
+                    if(m_braceLevel<0){
+                        int j;
+                        for(j=i-1;j>=0;j--){
+                            if(!str.at(j).isSpace()){
+                                break;
+                            }
+                        }
+                        str=str.left(j+1);
+                        break;
+                    }
+                }
+            }
+        }
         QJsonObject responseRangeObj;
         responseRangeObj.insert("start",m_position);
         responseRangeObj.insert("end",m_position);
@@ -144,8 +164,13 @@ void CodeGeeX2ClientInterface::sendData(const QByteArray &data)
                 QJsonArray ary;
                 m_pos=objParams.value("pos").toInt();
                 m_position=objParams.value("doc").toObject().value("position");
+                QString origTxt=objParams.value("txt").toString();
+                QString context=origTxt.left(m_pos);
+                QString contextDown=origTxt.mid(m_pos);
+                if(CodeGeeX2Settings::instance().braceBalance.value()){
+                    m_braceLevel=context.count('{')-context.count('}')+contextDown.count('{')-contextDown.count('}');
+                }
                 int maxLen=CodeGeeX2Settings::instance().contextLimit.value();
-                QString context=objParams.value("txt").toString().left(m_pos);
                 bool trimmed=false;
                 if(context.length()>maxLen){
                     trimmed=true;
