@@ -32,11 +32,14 @@ private:
     int m_row;
     int m_col;
     int m_braceLevel;
+    QMap<QString,QString> m_fileLang;
 
     QSharedPointer<QNetworkAccessManager> m_manager;
 
     void clearReply();
     bool expandHeader(QString &txt,const QString &includeStr,const QString &path,int &space,int &pos);
+
+    static QMap<QString,QString> m_langMap;
 };
 
 } // namespace Internal
