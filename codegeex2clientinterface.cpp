@@ -166,9 +166,8 @@ void CodeGeeX2ClientInterface::sendData(const QByteArray &data)
                 m_position=objParams.value("doc").toObject().value("position");
                 QString origTxt=objParams.value("txt").toString();
                 QString context=origTxt.left(m_pos);
-                QString contextDown=origTxt.mid(m_pos);
                 if(CodeGeeX2Settings::instance().braceBalance.value()){
-                    m_braceLevel=context.count('{')-context.count('}')+contextDown.count('{')-contextDown.count('}');
+                    m_braceLevel=origTxt.count('{')-origTxt.count('}');
                 }
                 int maxLen=CodeGeeX2Settings::instance().contextLimit.value();
                 bool trimmed=false;
