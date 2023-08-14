@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(QtCreator REQUIRED COMPONENTS Core)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 set(QtX Qt${QT_VERSION_MAJOR})
 
 # Add a CMake option that enables building your plugin with tests.
@@ -63,3 +64,4 @@ add_qtc_plugin(CodeGeeX2
     codegeex2clientinterface.cpp
 )
 
+qt_add_translations(CodeGeeX2 TS_FILES CodeGeeX2_zh_CN.ts)

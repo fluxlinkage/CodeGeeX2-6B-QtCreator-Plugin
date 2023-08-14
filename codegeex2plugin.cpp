@@ -24,6 +24,10 @@
 #include <QAction>
 #include <QToolButton>
 
+#include <QApplication>
+#include <QTranslator>
+#include <QTimeZone>
+
 using namespace Utils;
 using namespace Core;
 using namespace ProjectExplorer;
@@ -55,6 +59,13 @@ void cycleSuggestion(TextEditor::TextEditorWidget *editor, Direction direction)
 
 void CodeGeeX2Plugin::initialize()
 {
+    QTranslator *translator=new QTranslator(QApplication::instance());
+    QTimeZone localPosition = QDateTime::currentDateTime().timeZone();
+    if(QLocale::Country::China==localPosition.country()){
+        if(translator->load("CodeGeeX2_zh_CN",QApplication::applicationDirPath()+"/../share/qtcreator/translations")){
+            QApplication::installTranslator(translator);
+        }
+    }
     CodeGeeX2Settings::instance().readSettings(ICore::settings());
 
     restartClient();
