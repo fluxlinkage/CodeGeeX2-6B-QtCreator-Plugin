@@ -65,3 +65,4 @@ add_qtc_plugin(CodeGeeX2
 )
 
 qt_add_translations(CodeGeeX2 TS_FILES CodeGeeX2_zh_CN.ts)
+install(FILES ${PROJECT_BINARY_DIR}/CodeGeeX2_zh_CN.qm DESTINATION share/qtcreator/translations)
