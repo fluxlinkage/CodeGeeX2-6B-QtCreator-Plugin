@@ -8,7 +8,7 @@
 ## 二进制安装
 1. 在release中下载和你的Qt Creator版本完全一致的插件（看运气）。
 2. 关闭Qt Creator。
-3. 解压缩，将其中的dll（Windows）或者so（Linux）文件复制或者移动到Qt Creator的插件目录（大致是一个QtCreator/lib/qtcreator/plugins路径）。
+3. 解压缩。假设你使用Linux，Qt Creator安装在/opt/Qt/Tools/QtCreator/，则解压命令参考：sudo tar -zxvf CodeGeeX2-2.0.0-QtCreator11.0.1-Qt6.4.3-GCC.tar.gz -C /opt/Qt/Tools/QtCreator/。
 4. 打开Qt Creator。
 ## 编译源代码安装
 ### 需求
@@ -27,8 +27,7 @@ Qt Creator建议11.0及以上版本。Qt开发环境的版本需要与Qt Creator
 注意：局域网部署CodeGeeX2-6B请加入“--listen 0.0.0.0”参数。另外，确保防火墙没有拦截服务。
 在Qt Creator中选择“编辑”>“Preference”，找到“CodeGeeX2”项目，设置参数。局域网使用尤其注意修改IP设置。
 设置完成后应该可以使用了。敲一段代码，停顿几秒（和你显卡性能及参数设置有关），会出现提示。
-按“Tab”键接受，按“Ctrl+右”组合键接受一个片段。
+按“Tab”键接受，按“Ctrl+右”组合键接受一个单词。还有“接受一行”功能，目前只能鼠标点击，没有快捷键。
 ![截图](screenshot.png)
 # 已知问题
-1. 所有代码默认为C++，如果用Qt Creator写其他语言代码可能会出现奇怪的提示。
-2. 没有中文翻译。
+1. 如果注释中左大括号和右大括号数量不一致，“大括号平衡”功能将无法正常工作。可以在设置中将其关闭。
