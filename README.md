@@ -1,5 +1,7 @@
 # CodeGeeX2-6B-QtCreator-Plugin
 支持CodeGeeX2-6B模型的Qt Creator插件
+# 更新
+此插件不再更新，建议使用支持CodeGeeX4的[新插件](https://github.com/fluxlinkage/CodeGeeX4-QtCreator-Plugin)。
 # 简介
 支持本地或网络部署的[CodeGeeX2-6B](https://github.com/THUDM/CodeGeeX2)模型。
 目前不支持连接到[CodeGeeX官网](https://codegeex.cn/)。
